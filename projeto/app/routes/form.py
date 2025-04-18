@@ -4,8 +4,8 @@ import os
 
 bp = Blueprint('form', __name__)
 
-@bp.route('/preencher-projeto', methods=['GET'])
-def gerar_formulario():
+@bp.route('/preencher-projeto', methods=['GET', 'POST'])
+def preencher_projeto():
     modulos, inversores = [], []
     try:
         tree = ET.parse('static/dados_padrao.xml')
@@ -20,14 +20,7 @@ def gerar_formulario():
     except Exception as e:
         print(f"Erro ao carregar XML: {e}")
 
-    return render_template('form.html', modulos=modulos, inversores=inversores)
+    if request.method == 'POST':
+        print(request.form)
 
-
-@bp.route('/cadastro-modulo')
-def cadastro_modulo():
-    return render_template('cadastro_modulo.html')
-
-
-@bp.route('/cadastro-inversor')
-def cadastro_inversor():
-    return render_template('cadastro_inversor.html')
+    return render_template('preencher_projeto.html', modulos=modulos, inversores=inversores)
