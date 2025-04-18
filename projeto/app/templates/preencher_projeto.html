@@ -3,7 +3,7 @@
 {% block conteudo %}
 <h1>Preencher Projeto</h1>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" onsubmit="return validarFormulario()" enctype="multipart/form-data">
 
     <h2>Dados Pessoais</h2>
     <label>Nome:</label><br>
@@ -24,6 +24,7 @@
 
     <label>CEP:</label><br>
     <input type="text" name="cep"><br>
+    <button type="button" onclick="buscarEndereco()">Buscar</button><br>
 
     <label>Rua/Av.:</label><br>
     <input type="text" name="rua"><br>
@@ -121,5 +122,44 @@
 <script src="{{ url_for('static', filename='js/viacep.js') }}"></script>
 <script src="{{ url_for('static', filename='js/validarCpf.js') }}"></script>
 <script src="{{ url_for('static', filename='js/mascararCpfCnpj.js') }}"></script>
+
+<script>
+    async function buscarCoordenadasPorEndereco() {
+        const rua = document.getElementById("rua").value;
+        const numero = document.getElementById("numero").value;
+        const bairro = document.getElementById("bairro").value;
+        const cidade = document.getElementById("cidade").value;
+        const estado = document.getElementById("estado").value;
+
+        const enderecoCompleto = `${rua} ${numero}, ${bairro}, ${cidade}, ${estado}, Brasil`;
+
+        if (rua && numero && bairro && cidade && estado) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enderecoCompleto)}`);
+                const data = await response.json();
+
+                if (data.length > 0) {
+                    const lat = parseFloat(data[0].lat).toFixed(6);
+                    const lon = parseFloat(data[0].lon).toFixed(6);
+
+                    document.getElementById("latitude").value = lat;
+                    document.getElementById("longitude").value = lon;
+
+                    moverMarcadorManual(); // já move o marcador no mapa
+                } else {
+                    alert("Endereço não encontrado.");
+                }
+            } catch (err) {
+                console.error("Erro ao buscar coordenadas:", err);
+            }
+        }
+    }
+
+    // Dispara quando qualquer campo do endereço perde o foco
+    ["rua", "numero", "bairro", "cidade", "estado"].forEach(id => {
+        document.getElementById(id).addEventListener("blur", buscarCoordenadasPorEndereco);
+    });
+</script>
+
 
 {% endblock %}
