@@ -81,7 +81,7 @@ def preencher_projeto():
         # Gera planilha Anexo F
         endereco_completo = f"{rua}, {numero} - {bairro}"
         preencher_anexo_f(
-            modelo_path='static/modelo_anexo_f.xlsx',  # atualize conforme seu modelo
+            modelo_path='static/modelo_anexo_f.xlsx',  # atualize conforme o modelo.
             saida_path=str(caminho / 'anexo_f.xlsx'),
             nome=nome,
             cpf=cpf,
