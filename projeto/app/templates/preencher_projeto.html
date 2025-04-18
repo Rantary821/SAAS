@@ -72,11 +72,8 @@
 
     <h2>Coordenadas e Localização</h2>
     <div id="mapa" style="height: 300px; border: 1px solid #ccc; margin-bottom: 10px;"></div>
-    <label>Latitude:</label><br>
-    <input type="text" id="latitude" name="latitude"><br>
-
-    <label>Longitude:</label><br>
-    <input type="text" id="longitude" name="longitude"><br>
+    <label>Latitude:</label><input type="text" id="latitude" name="latitude" value="{{ lat or '' }}">
+    <label>Longitude:</label><input type="text" id="longitude" name="longitude" value="{{ lng or '' }}">
 
     <h2>Data para entrar em operação</h2>
     <input type="date" name="data_operacao"><br><br>
@@ -160,6 +157,16 @@
         document.getElementById(id).addEventListener("blur", buscarCoordenadasPorEndereco);
     });
 </script>
+<script>
+    // ⚠️ Certifique-se que esses valores são definidos pelo Jinja2 no render_template
+    const latValor = parseFloat(document.getElementById("latitude").value);
+    const lngValor = parseFloat(document.getElementById("longitude").value);
 
+    if (!isNaN(latValor) && !isNaN(lngValor)) {
+        const pos = [latValor, lngValor];
+        mapa.setView(pos, 15);
+        marcador = L.marker(pos).addTo(mapa);
+    }
+</script>
 
 {% endblock %}

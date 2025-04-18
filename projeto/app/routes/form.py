@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from werkzeug.utils import secure_filename
 
+from app.utils.geolocalizacao import buscar_coordenadas_por_endereco
 from app.utils.xml_utils import adicionar_modulo, adicionar_inversor
 from app.utils.utils_excel import preencher_anexo_f
 
@@ -26,6 +27,10 @@ def preencher_projeto():
     except Exception as e:
         print(f"Erro ao carregar XML: {e}")
 
+    # Inicializa para evitar erro no GET
+    latitude = ''
+    longitude = ''
+
     if request.method == 'POST':
         form = request.form
 
@@ -42,6 +47,13 @@ def preencher_projeto():
         estado = form.get('estado')
         latitude = form.get('latitude')
         longitude = form.get('longitude')
+
+        # Se lat/lng estiverem vazios, tenta buscar automaticamente
+        if not latitude or not longitude:
+            latitude, longitude = buscar_coordenadas_por_endereco(
+                rua, numero, bairro, cidade, estado
+            )
+
         data_operacao = form.get('data_operacao')
 
         inv_fabricante = form.get('inv_fabricante')
@@ -66,10 +78,10 @@ def preencher_projeto():
             nome_arquivo = secure_filename(arquivo_certificado.filename)
             arquivo_certificado.save(caminho / nome_arquivo)
 
-        # Chamar função de geração do Excel (Anexo F)
+        # Gera planilha Anexo F
         endereco_completo = f"{rua}, {numero} - {bairro}"
         preencher_anexo_f(
-            modelo_path='static/modelo_anexo_f.xlsx',  # atualize esse caminho
+            modelo_path='static/modelo_anexo_f.xlsx',  # atualize conforme seu modelo
             saida_path=str(caminho / 'anexo_f.xlsx'),
             nome=nome,
             cpf=cpf,
@@ -88,13 +100,20 @@ def preencher_projeto():
             mod_inv=inv_modelo,
             pot_mod=mod_potencia,
             pot_inv=inv_potencia,
-            pot_total="0",  # será ajustado pela função
-            padrao="B1",  # implementar campo depois
-            forma_conexao="Aérea",  # implementar campo depois
+            pot_total="0",  # será ajustado na planilha
+            padrao="B1",  # opcional
+            forma_conexao="Aérea",  # opcional
             uc=codigo_uc,
             cep=cep
         )
 
         return redirect(url_for('painel.painel'))
 
-    return render_template('preencher_projeto.html', modulos=modulos, inversores=inversores)
+    # No GET ou erro, retorna o template
+    return render_template(
+        'preencher_projeto.html',
+        modulos=modulos,
+        inversores=inversores,
+        lat=latitude,
+        lng=longitude
+    )
