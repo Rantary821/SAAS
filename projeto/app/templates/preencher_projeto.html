@@ -1,0 +1,79 @@
+
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h1>Preencher Projeto</h1>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <h2>Dados Pessoais</h2>
+    <label>Nome:</label><br>
+    <input type="text" name="nome"><br>
+
+    <label>CPF:</label><br>
+    <input type="text" name="cpf"><br>
+
+    <label>Celular:</label><br>
+    <input type="text" name="celular"><br>
+
+    <label>E-mail:</label><br>
+    <input type="email" name="email"><br>
+
+    <h2>Dados da Unidade Consumidora</h2>
+    <label>Código UC:</label><br>
+    <input type="text" name="codigo_uc"><br>
+
+    <label>CEP:</label><br>
+    <input type="text" name="cep"><br>
+
+    <label>Rua/Av.:</label><br>
+    <input type="text" name="rua"><br>
+
+    <label>Número:</label><br>
+    <input type="text" name="numero"><br>
+
+    <label>Bairro:</label><br>
+    <input type="text" name="bairro"><br>
+
+    <label>Cidade:</label><br>
+    <input type="text" name="cidade"><br>
+
+    <label>Estado (UF):</label><br>
+    <input type="text" name="estado"><br>
+
+    <h2>Inversor</h2>
+    <label>Fabricante:</label><br>
+    <input type="text" name="inv_fabricante"><br>
+
+    <label>Modelo:</label><br>
+    <input type="text" name="inv_modelo"><br>
+
+    <label>Potência (W):</label><br>
+    <input type="number" name="inv_potencia"><br>
+
+    <label>Quantidade:</label><br>
+    <input type="number" name="inv_quantidade"><br>
+
+    <label>Certificado INMETRO:</label><br>
+    <input type="file" name="inv_certificado"><br>
+
+    <h2>Módulo Fotovoltaico</h2>
+    <label>Fabricante:</label><br>
+    <input type="text" name="mod_fabricante"><br>
+
+    <label>Modelo:</label><br>
+    <input type="text" name="mod_modelo"><br>
+
+    <label>Potência (W):</label><br>
+    <input type="number" name="mod_potencia"><br>
+
+    <label>Quantidade:</label><br>
+    <input type="number" name="mod_quantidade"><br>
+
+    <h2>Data para entrar em operação</h2>
+    <input type="date" name="data_operacao"><br><br>
+
+    <button type="submit">Enviar</button>
+
+</form>
+{% endblock %}
