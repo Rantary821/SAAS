@@ -116,5 +116,10 @@
         moverMarcadorManual();
     });
 </script>
+<!-- Scripts obrigatórios -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="{{ url_for('static', filename='js/viacep.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validarCpf.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mascararCpfCnpj.js') }}"></script>
 
 {% endblock %}
