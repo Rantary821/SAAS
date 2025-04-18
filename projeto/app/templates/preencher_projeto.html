@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block conteudo %}
@@ -70,10 +69,52 @@
     <label>Quantidade:</label><br>
     <input type="number" name="mod_quantidade"><br>
 
+    <h2>Coordenadas e Localização</h2>
+    <div id="mapa" style="height: 300px; border: 1px solid #ccc; margin-bottom: 10px;"></div>
+    <label>Latitude:</label><br>
+    <input type="text" id="latitude" name="latitude"><br>
+
+    <label>Longitude:</label><br>
+    <input type="text" id="longitude" name="longitude"><br>
+
     <h2>Data para entrar em operação</h2>
     <input type="date" name="data_operacao"><br><br>
 
     <button type="submit">Enviar</button>
-
 </form>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    const mapa = L.map('mapa').setView([-21.1, -48.0], 13);  // posição inicial
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(mapa);
+
+    let marcador = null;
+
+    function moverMarcadorManual() {
+        const lat = parseFloat(document.getElementById("latitude").value);
+        const lng = parseFloat(document.getElementById("longitude").value);
+        if (!isNaN(lat) && !isNaN(lng)) {
+            const latlng = [lat, lng];
+            mapa.setView(latlng, 15);
+            if (marcador) {
+                marcador.setLatLng(latlng);
+            } else {
+                marcador = L.marker(latlng).addTo(mapa);
+            }
+        }
+    }
+
+    mapa.on("click", function (e) {
+        const { lat, lng } = e.latlng;
+        document.getElementById("latitude").value = lat.toFixed(6);
+        document.getElementById("longitude").value = lng.toFixed(6);
+        moverMarcadorManual();
+    });
+</script>
+
 {% endblock %}

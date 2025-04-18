@@ -9,7 +9,7 @@ bp = Blueprint('painel', __name__)
 @bp.route('/')
 def painel():
     projetos = carregar_estrutura_projetos()
-    return render_template("painel.html", projetos=projetos)
+    return render_template("base.html", projetos=projetos)
 
 @bp.route('/painel-conteudo')
 def painel_conteudo():
